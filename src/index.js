@@ -1,5 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+//boostrap first
+import 'bootstrap/dist/css/bootstrap.min.css';
+//index css after
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
