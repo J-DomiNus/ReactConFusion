@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import { Card, CardImg, CardImgOverlay, CardTitle } from 'reactstrap';
 
 class Menu extends Component {
-
-
-
-
+    
     render() {
 
         const menu = this.props.dishes.map((dish) => {
@@ -20,8 +17,6 @@ class Menu extends Component {
                 </div>
             )
         });
-
-        console.log('MenuComponent render')
 
         return (
             <div className='row'>
