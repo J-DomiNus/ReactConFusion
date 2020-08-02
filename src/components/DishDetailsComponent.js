@@ -3,12 +3,13 @@ import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbIte
 Modal, ModalHeader, ModalBody,Label, Row, Col } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
+import Loading from './LoadingComponent';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
 const minLength = (len) => (val) => val && (val.length >= len);
 
-class DishDetails extends Component {
+class CommentForm extends Component {
     state = {
         isModalOpen: false
     }
@@ -21,40 +22,16 @@ class DishDetails extends Component {
 
     handleSubmit(values) {
         this.toggleModal()
-        console.log('Current State is: ' + JSON.stringify(values))
-        alert('Current State is: ' + JSON.stringify(values))
-    }
-
-    render () {
-
-    const RenderDish = ({dish}) => {
-        return (
-            <div className='col-12 col-md-5 mt-1'>
-                <Card>
-                    <CardImg width='100%' src={dish.image} alt={dish.name} />
-                    <CardBody>
-                        <CardTitle>{dish.name}</CardTitle>
-                        <CardText>{dish.description}</CardText>
-                    </CardBody>
-                </Card>
-            </div>
+        this.props.addComment(
+            this.props.dishId, 
+            values.rating,
+            values.author,
+            values.comment
         )
     }
-        
-    const RenderComments = ({comments}) => {
+    render () {
         return (
-            <div className='col-12 col-md-5 mt-1'>
-                <h4>Comments</h4>
-                <ul className='list-unstyled'>
-                    {comments.map((comment) => {
-                    return (
-                        <li key={comment.id}>
-                            <p>{comment.comment}</p>
-                            <p>--{comment.author}, {new Intl.DateTimeFormat('en-US',{year: 'numeric', month: 'short',day:'2-digit'}).format(new Date(Date.parse(comment.date)))}</p>
-                        </li>
-                    )
-                })}
-                </ul>
+            <Fragment>
                 <Nav className>
                     <NavItem>
                         <Button outline onClick={() => this.toggleModal()}>
@@ -62,13 +39,6 @@ class DishDetails extends Component {
                         </Button>
                     </NavItem>
                 </Nav>
-            </div>
-        )
-    }
-
-    const CommentForm = () => {
-        return (
-            <Fragment>
                 <Modal isOpen={this.state.isModalOpen} 
                     toggle={() => this.toggleModal()}>
                     <ModalHeader toggle={() => this.toggleModal()}>Login</ModalHeader>
@@ -91,10 +61,10 @@ class DishDetails extends Component {
                             </Row>
                             <Row className='form-group'>
                                 <Col md={12}>
-                                    <Label htmlFor="name">Name</Label>
+                                    <Label htmlFor="author">Name</Label>
                                 </Col>
                                 <Col md={12}>
-                                    <Control.text model=".name" id="name" name="name"
+                                    <Control.text model=".author" id="author" name="name"
                                         placeholder="Name"
                                         className="form-control"
                                         validators={{
@@ -103,7 +73,7 @@ class DishDetails extends Component {
                                     />
                                     <Errors
                                         className="text-danger"
-                                        model=".name"
+                                        model=".author"
                                         show="touched"
                                         messages={{
                                             required: 'Required',
@@ -135,28 +105,90 @@ class DishDetails extends Component {
             </Fragment>
         )
     }
+    
+}
+
+    const RenderDish = ({dish}) => {
+        return (
+            <div className='col-12 col-md-5 mt-1'>
+                <Card>
+                    <CardImg width='100%' src={dish.image} alt={dish.name} />
+                    <CardBody>
+                        <CardTitle>{dish.name}</CardTitle>
+                        <CardText>{dish.description}</CardText>
+                    </CardBody>
+                </Card>
+            </div>
+        )
+    }
         
+    const RenderComments = ({comments, addComment, dishId}) => {
+        return (
+            <div className='col-12 col-md-5 mt-1'>
+                <h4>Comments</h4>
+                <ul className='list-unstyled'>
+                    {comments.map((comment) => {
+                    return (
+                        <li key={comment.id}>
+                            <p>{comment.comment}</p>
+                            <p>--{comment.author}, {new Intl.DateTimeFormat('en-US',{year: 'numeric', month: 'short',day:'2-digit'}).format(new Date(Date.parse(comment.date)))}</p>
+                        </li>
+                    )
+                })}
+                </ul>
+                <CommentForm dishId={dishId}
+                    addComment={addComment}/>
+            </div>
+        )
+    }
+
+    
+    const DishDetails = (props) => {
+        if (props.isLoading) {
+            return (
+                <div className='container'>
+                    <div className='row'>
+                        <Loading />
+                    </div>
+                </div>
+            )
+        }
+        else if (props.errMess) {
+            return (
+                <div className='container'>
+                    <div className='row'>
+                        <h4>{props.errMess}</h4>
+                    </div>
+                </div>
+            )
+        }
+        else if (props.dish != null)
         return (
             <div className='container'>
                 <div className='row'>
                     <Breadcrumb>
                         <BreadcrumbItem><Link to='/menu'>Menu</Link></BreadcrumbItem>
-                        <BreadcrumbItem active>{this.props.dish.name}</BreadcrumbItem>
+                        <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
                     </Breadcrumb>
                     <div className='col-12'>
-                        <h3>{this.props.dish.name}</h3>
+                        <h3>{props.dish.name}</h3>
                         <hr />
                     </div>
                 </div>
                 <div className= 'row'>
-                    <RenderDish dish={this.props.dish}/>
-                    <RenderComments comments={this.props.comments} />
+                    <RenderDish dish={props.dish}/>
+                    <RenderComments comments={props.comments} 
+                    addComment={props.addComment}
+                    dishId={props.dish.id}/>
                 </div>
-                <CommentForm />
+                
             </div>
         )
+        else
+            return (
+                <div></div>
+            )
     }
-}
     export default DishDetails;
 
 {/* <DishDetails dish={this.props.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} 
