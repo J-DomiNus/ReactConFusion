@@ -89,7 +89,7 @@ class CommentForm extends Component {
                                 <Label htmlFor="comment">Comment</Label>
                                 </Col>
                                 <Col md={12}>
-                                    <Control.textarea model=".message" id="message" name="message"
+                                    <Control.textarea model=".comment" id="comment" name="comment"
                                         rows="6"
                                         className="form-control" 
                                     />
@@ -179,8 +179,8 @@ class CommentForm extends Component {
                 <div className= 'row'>
                     <RenderDish dish={props.dish}/>
                     <RenderComments comments={props.comments} 
-                    postComment={props.postComment}
-                    dishId={props.dish.id}/>
+                        postComment={props.postComment}
+                        dishId={props.dish.id}/>
                 </div>
                 
             </div>
