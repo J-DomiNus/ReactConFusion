@@ -12,7 +12,15 @@ const validEmail = (val) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val
 class ContactUs extends Component {
 
     handleSubmit(values) {
-        console.log('Current State is: ' + JSON.stringify(values))
+        this.props.postFeedback( 
+            values.firstname,
+            values.lastname,
+            values.telnum,
+            values.email,
+            values.agree,
+            values.contactType,
+            values.message
+        )
         alert('Current State is: ' + JSON.stringify(values))
         this.props.resetFeedbackForm();
     }
@@ -122,10 +130,10 @@ class ContactUs extends Component {
                                         model=".telnum"
                                         show="touched"
                                         messages={{
-                                            required: 'Required',
-                                            minLength: 'Must be greater than 2 numbers',
+                                            required: 'Required ',
+                                            minLength: 'Must be greater than 6 numbers ',
                                             maxLength: 'Must be 15 numbers or less',
-                                            isNumber: 'Must be a number'
+                                            isNumber: 'Must be a number '
                                         }}
                                     />
                                 </Col>

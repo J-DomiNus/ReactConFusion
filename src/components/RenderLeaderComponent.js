@@ -1,5 +1,6 @@
 import React from 'react';
 import { Media } from 'reactstrap';
+import { baseUrl } from './../shared/baseUrl';
 
 const RenderLeader = ({leader}) => {
     return (
@@ -7,7 +8,7 @@ const RenderLeader = ({leader}) => {
             < div className="col col-sm col-md">
             <Media className='mt-4'>
                     <Media left top>
-                        <Media object src={leader.image} alt={leader.name} />
+                        <Media object src={baseUrl + leader.image} alt={leader.name} />
                     </Media>
                     <Media body className='ml-4'>
                         <Media heading>{leader.name}</Media >

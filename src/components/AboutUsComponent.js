@@ -2,15 +2,37 @@ import React from 'react';
 import RenderLeader from './RenderLeaderComponent';
 import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media,  } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import Loading from './LoadingComponent';
 
 const About = (props) => {
 
-    const leaders = props.leaders.map((leader) => {
+    const leaders = props.leaders.leaders.map((leader) => {
         return (
-            <RenderLeader leader={leader} />
+            <RenderLeader leader={leader} 
+                    isLoading={props.leaders.isLoading}
+                    errMess={props.leaders.errMess}/>
         );
     });
     
+    if (props.leaders.isLoading) {
+        return (
+            <div className='container'>
+                <div className='row'>
+                    <Loading />
+                </div>
+            </div>
+        )
+    }
+    else if (props.leaders.errMess) {
+        return (
+            <div className='container'>
+                <div className='row'>
+                    <h4>{props.leaders.errMess}</h4>
+                </div>
+            </div>
+        )
+    }
+    else
 
     return(
         <div className="container">
