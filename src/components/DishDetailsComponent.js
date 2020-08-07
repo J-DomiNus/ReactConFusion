@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import Loading from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -112,6 +113,11 @@ class CommentForm extends Component {
     const RenderDish = ({dish}) => {
         return (
             <div className='col-12 col-md-5 mt-1'>
+                <FadeTransform
+                in
+                transformProps={{
+                    exitTransform: 'scale(0.5) translateY(-50%)'
+                }}>
                 <Card>
                     <CardImg width='100%' src={baseUrl + dish.image} alt={dish.name} />
                     <CardBody>
@@ -119,6 +125,7 @@ class CommentForm extends Component {
                         <CardText>{dish.description}</CardText>
                     </CardBody>
                 </Card>
+                </FadeTransform>
             </div>
         )
     }
@@ -128,14 +135,18 @@ class CommentForm extends Component {
             <div className='col-12 col-md-5 mt-1'>
                 <h4>Comments</h4>
                 <ul className='list-unstyled'>
+                    <Stagger in>
                     {comments.map((comment) => {
-                    return (
-                        <li key={comment.id}>
-                            <p>{comment.comment}</p>
-                            <p>--{comment.author}, {new Intl.DateTimeFormat('en-US',{year: 'numeric', month: 'short',day:'2-digit'}).format(new Date(Date.parse(comment.date)))}</p>
-                        </li>
-                    )
-                })}
+                        return (
+                            <Fade in>
+                                <li key={comment.id}>
+                                    <p>{comment.comment}</p>
+                                    <p>--{comment.author}, {new Intl.DateTimeFormat('en-US',{year: 'numeric', month: 'short',day:'2-digit'}).format(new Date(Date.parse(comment.date)))}</p>
+                                </li>
+                            </Fade>
+                        )
+                        })}
+                    </Stagger>                    
                 </ul>
                 <CommentForm dishId={dishId}
                     postComment={postComment}/>
@@ -191,96 +202,3 @@ class CommentForm extends Component {
             )
     }
     export default DishDetails;
-
-{/* <DishDetails dish={this.props.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} 
-comments={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} /> */}
-
-//     export class CommentForm extends Component {
-//         state = {
-//             isModalOpen: false
-//         }
-
-//         toggleModal() {
-//             this.setState({
-//                 isModalOpen: !this.state.isModalOpen
-//             })
-//         }
-    
-//         handleComment(event) {
-//             this.toggleModal();
-//             alert('Username ' + this.username.value + 
-//                 'Password ' + this.password.value +
-//                 'Remember ' + this.remember.checked);
-//                 event.preventDefault()
-//         }
-
-//     render () {
-//         return (
-//             <Fragment>
-//                 <Modal isOpen={this.state.isModalOpen} 
-//                         toggle={() => this.toggleModal()}>
-//                     <ModalHeader toggle={() => this.toggleModal()}>Login</ModalHeader>
-//                     <ModalBody>
-//                         <Form onSubmit={(event) => this.handleLogin(event)}>
-//                             <FormGroup>
-//                                 <Label htmlFor='username'>Username</Label>
-//                                 <Input type='text' id='name' name='username' innerRef={(input) => this.username = input}></Input>
-//                             </FormGroup>
-//                             <FormGroup>
-//                                 <Label htmlFor='password'>Password</Label>
-//                                 <Input type='password' id='password' name='password' innerRef={(input) => this.password = input}></Input>
-//                             </FormGroup>
-//                             <FormGroup check>
-//                                 <Label check>
-//                                     <Input type='checkbox' name='remember' innerRef={(input) => this.remember = input}/>
-//                                     Remember me
-//                                 </Label>
-//                             </FormGroup>
-//                             <Button type='submit' value='submit' color='primary'>Login</Button>
-//                         </Form>
-//                     </ModalBody>
-//                 </Modal>
-//             </Fragment>
-//         )
-//     }
-// }
-
-
-
-
-
-    //------------------------------------- MY SOLUTION ----------------------------------------------
-    // render () {
-    //     if (this.props.dish != null) {
-    //         const comments = this.props.dish.comments.map((comment) => {
-    //             return (
-    //                 <ul key={comment.id} className='list-unstyled'>
-    //                     <li>{comment.comment}</li>
-    //                     <li>--{comment.author}, {new Intl.DateTimeFormat('en-US',{year: 'numeric', month: 'short',day:'2-digit'}).format(new Date(Date.parse(comment.date)))}</li>
-    //                 </ul>
-    //             )
-    //         })
-    //         return (
-    //             <div className='row'>
-    //                 <div className='col-12 col-md-5 mt-1'>
-    //                         <Card>
-    //                             <CardImg width='100%' src={this.props.dish.image} alt={this.props.dish.name} />
-    //                             <CardBody>
-    //                                 <CardTitle>{this.props.dish.name}</CardTitle>
-    //                                 <CardText>{this.props.dish.description}</CardText>
-    //                             </CardBody>
-    //                         </Card>
-    //                     </div>
-    //                     <div className='col-12 col-md-5 mt-1'>
-    //                         <h4>Comments</h4>
-    //                             {comments}
-    //                     </div>
-    //             </div>
-    //         )
-    //     }
-    //     else {
-    //         return (
-    //             <div></div>
-    //         )
-    //     }
-    // }
